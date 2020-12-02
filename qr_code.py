@@ -1,26 +1,37 @@
 import cv2
 import numpy as np
 from pyzbar.pyzbar import decode
+import imutils
 
-#frame = cv2.imread('qr.png')
+font = cv2.FONT_HERSHEY_SIMPLEX
 cap = cv2.VideoCapture(0)
-#cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-#cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
+# full screen window
+# cv2.namedWindow("frame", cv2.WND_PROP_FULLSCREEN)
+# cv2.setWindowProperty("frame", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
 while True:
 
     success, frame = cap.read()
+    # resize frame
+    frame = imutils.resize(frame, width=480)
+
     for barcode in decode(frame):
-        myData = barcode.data.decode('utf-8')
-        print(myData)
+
+        data = barcode.data.decode('utf-8')
+        # print(data)  # if data = 'data'
         pts = np.array([barcode.polygon], np.int32)
         pts = pts.reshape((-1, 1, 2))
         cv2.polylines(frame, [pts], True, (255, 0, 255), 5)
         pts2 = barcode.rect
-        cv2.putText(frame, myData, (pts2[0], pts2[1]), cv2.FONT_HERSHEY_SIMPLEX,
-                    0.9, (255, 0, 255), 2)
+        cv2.putText(
+            frame, data, (pts2[0], pts2[1]), font, 0.9, (255, 0, 255), 2)
 
-    cv2.imshow('Result', frame)
-    key = cv2.waitKey(1)
-    if key == 27:
+        if data == 'match':
+            print('match')
+        else:
+            print(f'{data} is not what I am looking for')
+
+    cv2.imshow('frame', frame)
+    if cv2.waitKey(1) & 0xFF == 27:
         break
