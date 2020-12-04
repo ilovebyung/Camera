@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from pyzbar.pyzbar import decode
-import imutils
+#import imutils
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 cap = cv2.VideoCapture(0)
@@ -14,7 +14,7 @@ while True:
 
     success, frame = cap.read()
     # resize frame
-    frame = imutils.resize(frame, width=480)
+    #frame = imutils.resize(frame, width=480)
 
     for barcode in decode(frame):
 
