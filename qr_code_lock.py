@@ -32,7 +32,7 @@ while True:
     # resize frame
     #frame = imutils.resize(frame, width=480)
 
-    Spool = multiprocessing.Pool()
+    pool = multiprocessing.Pool()
         
     for barcode in decode(frame):
 
